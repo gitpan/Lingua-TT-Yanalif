@@ -8,7 +8,7 @@ use utf8;
 use base qw/Exporter/;
 use POSIX qw/islower/;
 our @EXPORT = our @EXPORT_OK = qw/cyr2lat/;
-our $VERSION = "0.01";
+our $VERSION = "0.02";
 
 no  warnings qw/once/;
 use constant WAQ_SUZIQ  => "аоыуиеёэюя\x{4D9}\x{4E9}\x{4AF}";
@@ -58,6 +58,10 @@ sub cyr2lat(;$)
         s/(?<=\B[аА\x{4D8}\x{4D9}])У/\x{4B0}/g;
         s/(?<=\B[аА\x{4D8}\x{4D9}])У/\x{4B1}/g;
 
+        # "a" hem "a:" xereflerden son kilgen "u:" -> "w"
+        s/(?<=\B[аА\x{4D8}\x{4D9}])[\x{4AE}]/\x{4B0}/g;
+        s/(?<=\B[аА\x{4D8}\x{4D9}])[\x{4AF}]/\x{4B1}/g;
+
         # №31
         #s/(?<=\B[аА\x{4D8}\x{4D9}])В/\x{4B0}/g;
         #s/(?<=\B[аА\x{4D8}\x{4D9}])в/\x{4B1}/g;
@@ -79,7 +83,7 @@ sub cyr2lat(;$)
         s/\Bрга\b/р\x{491}а/g;
 
         tr/ьЬ/''/;
-        tr/ъЪ//;
+        tr/ъЪ//d;
 
         tr/
             АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЭЫ\x{4D8}\x{4E8}\x{4AE}\x{4A2}\x{496}\x{4BA}\x{490}\x{4A0}\x{4B0}
