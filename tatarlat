@@ -1,0 +1,22 @@
+#!perl
+use 5.005_62;
+use strict;
+use warnings;
+use utf8;
+use Unicode::Lite;
+use Lingua::TT::Yanalif;
+
+our $src_convertor = $ARGV[0] && $ARGV[0] eq '--sbcs-in' && shift @ARGV ?
+    convertor('windows-1259', 'utf8') : undef;
+
+our $out_convertor = $ARGV[0] && $ARGV[0] eq '--sbcs-out' && shift @ARGV ?
+    convertor('utf8', 'windows-1254') : undef;
+
+
+while( <> )
+{
+    &$src_convertor() if $src_convertor;
+    &cyr2lat();
+    &$out_convertor() if $out_convertor;
+    print;
+}

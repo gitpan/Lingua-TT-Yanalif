@@ -1,0 +1,19 @@
+======================================================================
+Unicode::Map
+======================================================================
+For binding windows-1259 encoding map file to Unicode::Map
+copy CP1259.map to perl/site/lib/Unicode/Map/MS/WIN/ and add to file
+perl/site/lib/Unicode/Map/REGISTRY following lines:
+
+   name:    CP1259
+   map:     $UnicodeMappings/MS/WIN/CP1259.map
+   alias:   windows-1259
+
+
+
+======================================================================
+XML::Parser::Expat
+======================================================================
+For binding windows-1259 encoding map file to XML::Parser::Expat
+copy CP1259.map to perl/site/lib/XML/Parser/Encodings/
+
