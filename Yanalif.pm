@@ -2,12 +2,12 @@ package Lingua::TT::Yanalif;
 
 use 5.005_62;
 use strict;
-use warnings;
+use warnings; no warnings qw/utf8/;
 use locale;
 use utf8;
 use base qw/Exporter/;
 our @EXPORT = our @EXPORT_OK = qw/cyr2lat/;
-our $VERSION = "0.06";
+our $VERSION = "0.08";
 
 sub __yaña_imlä(;$);
 
@@ -18,13 +18,8 @@ sub cyr2lat(;$)
     {
         __yaña_imlä();
 
-        tr/
-            АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЭЫӘӨҮҢҖҺҐҚҰ
-            абвгдежзийклмнопрстуфхцчшэыәөүңҗһґқұ
-        /
-            ABVGDEJZİYKLMNOPRSTUFXSÇŞEIÄÖÜÑCHĞQW
-            abvgdejziyklmnoprstufxsçşeıäöüñchğqw
-        /;
+		tr[АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЭЫӘӨҮҢҖҺҐҚҰабвгдежзийклмнопрстуфхцчшэыәөүңҗһґқұ]
+		  [ABVGDEJZİYKLMNOPRSTUFXSÇŞEIÄÖÜÑCHĞQWabvgdejziyklmnoprstufxsçşeıäöüñchğqw];
         return $_ if defined wantarray;
     }
     $_ = $str if defined $_[0] and not ref $str;
@@ -199,6 +194,7 @@ sub __yaña_imlä(;$)
     $_ = $str if defined $_[0] and not ref $str;
 }
 
+1;
 
 =pod
 no  warnings qw/once/;
@@ -211,25 +207,25 @@ my $W_TARTIQ = "бвгджзйклмнпрстфхцчшщьъhңҗҺґқұ";
 my $TARTIQLAR= $W_TARTIQ.$Z_TARTIQ;
 =cut
 
-1;
-
 =head1 NAME
 
-Lingua::TT::Yanalif - Converts text for Tatar language
+Lingua::TT::Yanalif - Converts tatar texts (to new latin orfography)
 
 =head1 SYNOPSIS
 
  use Lingua::TT::Yanalif;
 
- cyr2lat() for @iske_tatar_text_strings;
- print cyr2lat( $iske_tatar_text );
+ cyr2lat() for @iske_tatar_mete;
+ print cyr2lat( $iske_tatar_mete );
 
 =head1 DESCRIPTION
 
-Allow convert old cyrillic tatarish text to latin with new orfografy.
+Allow convert old cyrillic tatarish text to latin with new orfography.
 
 For converting a non-UTF-8 text, read "readme" file in "maps" subdir from
 the package distribution.
+
+For command line converting - 'tatarlat' script imcluded.
 
 =head1 AUTHOR
 

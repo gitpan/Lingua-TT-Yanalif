@@ -1,14 +1,19 @@
 NAME
-    Lingua::TT::Yanalif - Converts text for Tatar language
+    Lingua::TT::Yanalif - Converts tatar texts (to new latin orfography)
 
 SYNOPSIS
      use Lingua::TT::Yanalif;
 
-     print cyr2lat( $iske_tatar_text );
+     cyr2lat() for @iske_tatar_mete;
+     print cyr2lat( $iske_tatar_mete );
 
 DESCRIPTION
-    Allow convert old cyrillic tatarish text to latin with new orfografy.
+    Allow convert old cyrillic tatarish text to latin with new orfography.
+
+    For converting a non-UTF-8 text, read "readme" file in "maps" subdir
+    from the package distribution.
+
+    For command line converting - 'tatarlat' script imcluded.
 
 AUTHOR
-    Albert Michauer <amichauer@cpan.org>
-
+    Albert Bulgari <amichauer@cpan.org>
