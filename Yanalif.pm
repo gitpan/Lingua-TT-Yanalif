@@ -6,28 +6,59 @@ use warnings;
 use locale;
 use utf8;
 use base qw/Exporter/;
-#use POSIX qw/islower/;
 our @EXPORT = our @EXPORT_OK = qw/cyr2lat/;
-our $VERSION = "0.04";
+our $VERSION = "0.06";
 
-no  warnings qw/once/;
-my $Q_SUZIQ  = (my $WQ_SUZIQ = "аоуы" ).(my $ZQ_SUZIQ = "АОУЫ" );
-my $N_SUZIQ  = (my $WN_SUZIQ = "әөүэи").(my $ZN_SUZIQ = "ӘӨҮЭИ");
-my $X_SUZIQ  = (my $WX_SUZIQ = "еёюя" ).(my $ZX_SUZIQ = "ЕЁЮЯ" );
-my $SUZIQLAR = $Q_SUZIQ.$N_SUZIQ.$X_SUZIQ;
-my $Z_TARTIQ = "БВГДЖЗЙКЛМНПРСТФХЦЧШЩЬЪHҢҖҺҐҚҰ";
-my $W_TARTIQ = "бвгджзйклмнпрстфхцчшщьъhңҗҺґқұ";
-my $TARTIQLAR= $W_TARTIQ.$Z_TARTIQ;
+sub __yaña_imlä(;$);
 
 sub cyr2lat(;$)
+{
+    my $str = scalar @_ ? $_[0] : defined wantarray ? $_ : \$_;
+    for (ref $str ? $$str : $str)
+    {
+        __yaña_imlä();
+
+        tr/
+            АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЭЫӘӨҮҢҖҺҐҚҰ
+            абвгдежзийклмнопрстуфхцчшэыәөүңҗһґқұ
+        /
+            ABVGDEJZİYKLMNOPRSTUFXSÇŞEIÄÖÜÑCHĞQW
+            abvgdejziyklmnoprstufxsçşeıäöüñchğqw
+        /;
+        return $_ if defined wantarray;
+    }
+    $_ = $str if defined $_[0] and not ref $str;
+}
+
+sub cyr2lat2(;$)
+{
+    my $str = scalar @_ ? $_[0] : defined wantarray ? $_ : \$_;
+    for (ref $str ? $$str : $str)
+    {
+        __yaña_imlä();
+
+        tr/
+            АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЭЫӘӨҮҢҖҺҐҚҰ
+            абвгдежзийклмнопрстуфхцчшэыәөүңҗһґқұ
+        /
+            ABVGDÍJZİYKLMNOPRSTUFXSÇŞÍIEÖÜÑCHĞQW
+            abvgdíjziyklmnoprstufxsçşíıeöüñchğqw
+        /;
+        return $_ if defined wantarray;
+    }
+    $_ = $str if defined $_[0] and not ref $str;
+}
+
+sub __yaña_imlä(;$)
 {
     my $str = scalar @_ ? $_[0] : defined wantarray ? $_ : \$_;
 
     for (ref $str ? $$str : $str)
     {
         # Yaña orfografiä
-        s/(?<=е)(?-i:в)(?=р[оа])/у/gi;
-        s/(?<=е)(?-i:В)(?=р[оа])/У/gi;
+        s/(?-i:ев)(?=р[оа])/аұ/gi;
+        s/(?-i:Ев)(?=р[оа])/Аұ/gi;
+        s/(?-i:ЕВ)(?=р[оа])/АҰ/gi;
 
         # №37
         s/(?<=[аоуиыеёэюяәөү])(?i:ц)(?=[аоуиыеёэюяәөү])/тс/gio;
@@ -106,8 +137,8 @@ sub cyr2lat(;$)
         s/г(?=(?i)[аоуыъ])/ґ/g;
 
         # №20
-        s/к(?=(?i)[аоуыъ])|(?<=(?i)[аоуы])к/қ/g;
-        s/К(?=(?i)[аоуыъ])|(?<=(?i)[аоуы])К/Қ/g;
+        s/к(?=(?i)й?[аоуыъ])|(?<=(?i)[аоуы])к/қ/g;
+        s/К(?=(?i)й?[аоуыъ])|(?<=(?i)[аоуы])К/Қ/g;
         s/(?<=[қґ])ъ//gi;
 
         # №36
@@ -137,8 +168,8 @@ sub cyr2lat(;$)
         s/(?<=(?i)публи|амери|систи|ммуни)Қ/К/g;
         s/(?<=(?i)тарих)ы\b/и/g;
         s/(?<=(?i)тарих)Ы\b/И/g;
-        s/\bқ(?=(?i)онстит|омбинат|артин|ама|алендар|омпоз|онфер|оммун|онсерт|олхоз|онгрес|онсер|афедр|онкр)/к/g;
-        s/\bҚ(?=(?i)онстит|омбинат|артин|ама|алендар|омпоз|онфер|оммун|онсерт|олхоз|онгрес|онсер|афедр|онкр)/К/g;
+        s/\bқ(?=(?i)онстит|омбинат|артин|ама|алендар|омпоз|онфер|оммун|онцерт|олхоз|онгрес|онсер|афедр|онкр|афе|ухнйа|асса)/к/g;
+        s/\bҚ(?=(?i)онстит|омбинат|артин|ама|алендар|омпоз|онфер|оммун|онцерт|олхоз|онгрес|онсер|афедр|онкр|афе|ухнйа|асса)/К/g;
         s/қ(?=(?i)тйәбр|убатор|ассет)/к/g;
         s/Қ(?=(?i)тйәбр|убатор|ассет)/К/g;
         s/(?<=(?i)с)қ(?=(?i)ульпт)/к/g;
@@ -163,20 +194,22 @@ sub cyr2lat(;$)
         tr/ьЬ/'/;
         tr/ъЪ//d;
 
-        tr/
-            АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЭЫӘӨҮҢҖҺҐҚҰ
-            абвгдежзийклмнопрстуфхцчшэыәөүңҗһґқұ
-        /
-            ABVGDEJZİYKLMNOPRSTUFXSÇŞEIÄÖÜÑCHĞQW
-            abvgdejziyklmnoprstufxsçşeıäöüñchğqw
-        /;
-
         return $_ if defined wantarray;
     }
-
     $_ = $str if defined $_[0] and not ref $str;
 }
 
+
+=pod
+no  warnings qw/once/;
+my $Q_SUZIQ  = (my $WQ_SUZIQ = "аоуы" ).(my $ZQ_SUZIQ = "АОУЫ" );
+my $N_SUZIQ  = (my $WN_SUZIQ = "әөүэи").(my $ZN_SUZIQ = "ӘӨҮЭИ");
+my $X_SUZIQ  = (my $WX_SUZIQ = "еёюя" ).(my $ZX_SUZIQ = "ЕЁЮЯ" );
+my $SUZIQLAR = $Q_SUZIQ.$N_SUZIQ.$X_SUZIQ;
+my $Z_TARTIQ = "БВГДЖЗЙКЛМНПРСТФХЦЧШЩЬЪHҢҖҺҐҚҰ";
+my $W_TARTIQ = "бвгджзйклмнпрстфхцчшщьъhңҗҺґқұ";
+my $TARTIQLAR= $W_TARTIQ.$Z_TARTIQ;
+=cut
 
 1;
 
@@ -200,8 +233,49 @@ the package distribution.
 
 =head1 AUTHOR
 
-Albert Michauer <amichauer@cpan.org>
+Albert Bulğari <amichauer@cpan.org>
 
 =cut
 
 __DATA__
+
+E
+тарихы и
+
+публик
+америк
+систик
+коммуник
+констит
+комбинат
+картин
+\bкама
+календар
+композ
+конфер
+коммун
+концерт
+колхоз
+конгрес
+консер
+кафедр
+конкр
+\bкафе
+\bкухня\b
+касса
+
+окт(?=әбр)
+кубатор
+кассет
+скульпт
+
+завод
+
+квадрат
+вагон
+фестиваль
+онсерв
+
+музык
+газет
+гастрол

@@ -5,6 +5,7 @@ use warnings;
 use utf8;
 use Unicode::Lite;
 use Lingua::TT::Yanalif;
+use open IN => ":raw", OUT => ":raw";
 
 our $src_convertor = $ARGV[0] && $ARGV[0] eq '--sbcs-in' && shift @ARGV ?
     convertor('windows-1259', 'utf8') : undef;
